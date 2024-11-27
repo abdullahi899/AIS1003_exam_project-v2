@@ -1,0 +1,8 @@
+add_library(aircraftLib
+        Projectile.cpp
+        Spaceship.cpp
+        game.cpp
+        movement.cpp)
+target_sources(aircraftLib PRIVATE astroid.cpp)
+target_include_directories(aircraftLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(aircraftLib PUBLIC threepp::threepp imgui::imgui  )
