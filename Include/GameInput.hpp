@@ -16,14 +16,15 @@ public:
         if (moveUp) {
             m_spaceship.moveUp();
         }
-        if (moveDown) {
-            m_spaceship.moveDown();
-        }
         if (moveLeft) {
             m_spaceship.moveLeft();
         }
         if (moveRight) {
             m_spaceship.moveRight();
+        }
+        if (shoot) {
+
+
         }
     }
 

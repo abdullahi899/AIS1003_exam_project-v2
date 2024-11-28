@@ -1,5 +1,5 @@
 add_library(aircraftLib
-        Projectile.cpp
+        Bullet.cpp
         Spaceship.cpp
         game.cpp
         movement.cpp)

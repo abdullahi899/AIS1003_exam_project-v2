@@ -51,6 +51,8 @@ add_executable(threepp_demo
         include/game.hpp
         Include/GameInput.hpp
         Include/Astroid.hpp
+        src/Astroid.cpp
+        Include/Bullet.hpp
 )
 
 # Include directories for the main executable

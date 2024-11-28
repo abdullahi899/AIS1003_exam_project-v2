@@ -2,13 +2,14 @@
 #include "GameInput.hpp"
 #include "Spaceship.hpp"
 #include "threepp/threepp.hpp"
+#include "Bullet.hpp"
 
 
 using namespace threepp;
 
 int main() {
     // Create the rendering window
-    Canvas canvas("Top-Down View of Spaceship", {{"resizable", false}});
+    Canvas canvas("Astroid-Game", {{"resizable", false}});
     canvas.setSize({800, 800});
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::white);
@@ -25,22 +26,25 @@ int main() {
     camera->lookAt(Vector3(0, 0, 0));
 
 
-    // Create ground in threepp
-    auto groundGeometry = BoxGeometry::create(100, 1, 0);
-    auto groundMaterial = MeshPhongMaterial::create();
-    groundMaterial->color = Color::black;
-    auto groundMesh = Mesh::create(groundGeometry, groundMaterial);
-    groundMesh->position.set(0, -10.0f, -5.0f);
-    scene->add(groundMesh);
-
     Spaceship spaceship(scene);
+
+    auto astroids = Astroid::generateAstroids(scene, 10);
+
+
+    /*std::vector<std::shared_ptr<Bullet>> bullets;*/
+
 
     GameInput gameInput(spaceship);
     canvas.addKeyListener(gameInput);
 
+
     canvas.animate([&]() {
         renderer.render(*scene, *camera);
         gameInput.update();
+        for (auto &astroid : astroids) {
+       astroid->update();
+   }
+
     });
     return 0;
 }
