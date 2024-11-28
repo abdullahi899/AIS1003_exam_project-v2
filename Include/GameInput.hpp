@@ -3,6 +3,7 @@
 
 #include "Spaceship.hpp"
 #include <threepp/threepp.hpp>
+#include "Bullet.hpp"
 
 using namespace threepp;
 
@@ -12,7 +13,7 @@ public:
     }
 
 
-    void update() {
+    void update(std::vector<std::shared_ptr<Bullet> > &bullets) {
         if (moveUp) {
             m_spaceship.moveUp();
         }
@@ -22,10 +23,11 @@ public:
         if (moveRight) {
             m_spaceship.moveRight();
         }
-        if (shoot) {
 
-
+        if (shoot and !shoot_0) {
+            m_spaceship.shoot(bullets);
         }
+        shoot_0 = shoot;
     }
 
 private:
@@ -34,6 +36,7 @@ private:
     bool moveLeft = false;
     bool moveRight = false;
     bool shoot = false;
+    bool shoot_0 = false;
 
 
     void onKeyPressed(threepp::KeyEvent evt) override {
@@ -57,6 +60,7 @@ private:
                 break;
         }
     }
+
     void onKeyReleased(threepp::KeyEvent evt) override {
         switch (evt.key) {
             case threepp::Key::W:

@@ -53,6 +53,7 @@ add_executable(threepp_demo
         Include/Astroid.hpp
         src/Astroid.cpp
         Include/Bullet.hpp
+        src/Bullet.cpp
 )
 
 # Include directories for the main executable

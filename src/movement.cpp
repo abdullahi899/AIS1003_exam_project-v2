@@ -1,2 +1,0 @@
-#include "threepp/threepp.hpp"
-

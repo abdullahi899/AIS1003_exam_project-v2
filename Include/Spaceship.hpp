@@ -2,6 +2,7 @@
 #define SPACESHIP_HPP
 
 #include "threepp/threepp.hpp"
+#include "Bullet.hpp"
 
 using namespace threepp;
 
@@ -42,23 +43,27 @@ public:
     void moveRight() {
         spaceship->rotation.y -= rotationSpeed;
     }
-    void shoot() {
+    void shoot(std::vector<std::shared_ptr<Bullet>> &bullets) {
+        auto direction = Vector3(std::sin(spaceship->rotation.y), 1, std::cos(spaceship->rotation.y)).normalize();
+        auto position = spaceship->position + direction * 0.1f; // Offset in front of the spaceship
 
-        }
+        bullets.emplace_back(std::make_shared<Bullet>(position, direction, 0.35f, 5.0f));
+    }
 
 
 
 
-    // Ensure that the position is inherited or accessible
+
+
 private:
     std::shared_ptr<Group> spaceship;
     std::shared_ptr<Scene> &scene;
-    float moveSpeed = 0.2f;
+    float moveSpeed = 0.1f;
     float rotationSpeed = 0.04f;
 
     void createSpaceShip() {
         spaceship = OBJLoader().load("data/textures/Fighter_01.obj");
-        spaceship->scale.set(0.08, 0.08, 0.08);
+        spaceship->scale.set(0.14, 0.14, 0.14);
         spaceship->position.x = (std::numbers::pi);
         scene->add(spaceship);
     }
