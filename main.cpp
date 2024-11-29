@@ -5,16 +5,17 @@
 #include "Bullet.hpp"
 
 
+
 using namespace threepp;
 
 int main() {
-    // Create the rendering window
+
     Canvas canvas("Astroid-Game", {{"resizable", false}});
     canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::white);
 
-    // Create the scene and camera
+
     auto scene = Scene::create();
 
     auto camera = OrthographicCamera::create(
@@ -24,8 +25,6 @@ int main() {
 
     camera->position.set(0, 5, 0);
     camera->lookAt(Vector3(0, 0, 0));
-
-
 
 
     Spaceship spaceship(scene);
@@ -43,7 +42,7 @@ int main() {
         gameInput.update(bullets);
 
         for (auto shot = bullets.begin(); shot != bullets.end();) {
-            (*shot)->update(0.16f);
+            (*shot)->update(0.20f);
             if (!(*shot)->isAlive()) {
                 shot = bullets.erase(shot);
             } else {

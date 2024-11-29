@@ -7,7 +7,7 @@
 
 using namespace threepp;
 
-class GameInput : public threepp::KeyListener {
+class GameInput : public KeyListener {
 public:
     explicit GameInput(Spaceship &spaceship) : m_spaceship(spaceship) {
     }
@@ -39,21 +39,21 @@ private:
     bool shoot_0 = false;
 
 
-    void onKeyPressed(threepp::KeyEvent evt) override {
+    void onKeyPressed(KeyEvent evt) override {
         switch (evt.key) {
-            case threepp::Key::W:
+            case Key::W:
                 moveUp = true;
                 break;
-            case threepp::Key::S:
+            case Key::S:
                 moveDown = true;
                 break;
             case threepp::Key::A:
                 moveLeft = true;
                 break;
-            case threepp::Key::D:
+            case Key::D:
                 moveRight = true;
                 break;
-            case threepp::Key::SPACE:
+            case Key::SPACE:
                 shoot = true;
                 break;
             default:
@@ -61,21 +61,21 @@ private:
         }
     }
 
-    void onKeyReleased(threepp::KeyEvent evt) override {
+    void onKeyReleased(KeyEvent evt) override {
         switch (evt.key) {
-            case threepp::Key::W:
+            case Key::W:
                 moveUp = false;
                 break;
-            case threepp::Key::S:
+            case Key::S:
                 moveDown = false;
                 break;
-            case threepp::Key::A:
+            case Key::A:
                 moveLeft = false;
                 break;
-            case threepp::Key::D:
+            case Key::D:
                 moveRight = false;
                 break;
-            case threepp::Key::SPACE:
+            case Key::SPACE:
                 shoot = false;
                 break;
             default:

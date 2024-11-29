@@ -18,13 +18,13 @@ Astroid::Astroid(std::shared_ptr<Scene> scene) {
 
 
     std::uniform_real_distribution<float> velocityDist(-0.06f, 0.05f);
-    velocity = Vector3(velocityDist(make), velocityDist(make), 0.01);
+    velocity = Vector3(velocityDist(make), velocityDist(make), velocityDist(make));
 
     scene->add(mesh);
 }
 
 void Astroid::update() {
-    // Update position
+
     mesh->position.add(velocity);
 
     if (mesh->position.x <= -11) {
