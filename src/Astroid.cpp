@@ -1,4 +1,6 @@
 #include "Astroid.hpp"
+
+#include <iostream>
 #include <random>
 
 using namespace threepp;
@@ -16,7 +18,6 @@ Astroid::Astroid(std::shared_ptr<Scene> scene) {
 
     mesh->position.set(positionDist(make), positionDist(make), positionDist(make));
 
-
     std::uniform_real_distribution<float> velocityDist(-0.06f, 0.05f);
     velocity = Vector3(velocityDist(make), velocityDist(make), velocityDist(make));
 
@@ -24,28 +25,27 @@ Astroid::Astroid(std::shared_ptr<Scene> scene) {
 }
 
 void Astroid::update() {
-
+    // Move the asteroid
     mesh->position.add(velocity);
 
-    if (mesh->position.x <= -11) {
-        mesh->position.x = 11;
-    } else if (mesh->position.x >= 11) {
-        mesh->position.x = -11;
-    } else if (mesh->position.z <= -11) {
-        mesh->position.z = 11;
-    } else if (mesh->position.z >= 11) {
-        mesh->position.z = -11;
-    }
-
-    if (mesh->position.x > 10) mesh->position.x = -10;
+    // Wrap asteroid around the screen edges
     if (mesh->position.x < -10) mesh->position.x = 10;
-    if (mesh->position.y > 10) mesh->position.y = -10;
-    if (mesh->position.y < -10) mesh->position.y = 10;
+    if (mesh->position.x > 10) mesh->position.x = -10;
+    if (mesh->position.z < -10) mesh->position.z = 10;
+    if (mesh->position.z > 10) mesh->position.z = -10;
+
+    // Debugging: Log asteroid position after updating
+    std::cout << "Asteroid Updated Position: " << mesh->position << std::endl;
 }
 
 
-std::vector<std::shared_ptr<Astroid> > Astroid::generateAstroids(std::shared_ptr<Scene> scene, int count) {
-    std::vector<std::shared_ptr<Astroid> > astroids;
+
+const Vector3 &Astroid::getPosition() const {
+    return mesh->position;
+}
+
+std::vector<std::shared_ptr<Astroid>> Astroid::generateAstroids(std::shared_ptr<Scene> scene, int count) {
+    std::vector<std::shared_ptr<Astroid>> astroids;
 
     for (int i = 0; i < count; ++i) {
         astroids.push_back(std::make_shared<Astroid>(scene));

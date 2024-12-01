@@ -52,6 +52,8 @@ add_executable(threepp_demo
         src/Astroid.cpp
         Include/Bullet.hpp
         src/Bullet.cpp
+        src/Spaceship.cpp
+        "Include/Collison helper.hpp"
 )
 
 
