@@ -26,20 +26,9 @@ FetchContent_Declare(
         GIT_TAG v3.4.0
 )
 
-# FetchContent for Box2D
-FetchContent_Declare(
-        box2d
-        GIT_REPOSITORY https://github.com/erincatto/box2d.git
-        GIT_TAG v2.4.1
-)
-
-# Disable Box2D's GLFW and examples
-set(BOX2D_BUILD_EXAMPLES OFF CACHE BOOL "Disable Box2D examples")
-set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "Disable Box2D unit tests")
-set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "Disable Box2D Testbed (GLFW)")
 
 
-FetchContent_MakeAvailable(threepp Catch2 box2d)
+FetchContent_MakeAvailable(threepp Catch2 )
 
 file(COPY ${CMAKE_SOURCE_DIR}/data/textures DESTINATION ${CMAKE_BINARY_DIR}/data)
 
@@ -54,6 +43,9 @@ add_executable(threepp_demo
         src/Bullet.cpp
         src/Spaceship.cpp
         "Include/Collison helper.hpp"
+        Include/Conector.hpp
+        Include/Conector.hpp
+        "src/Collison helper.cpp"
 )
 
 
@@ -62,7 +54,6 @@ target_include_directories(threepp_demo PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 target_link_libraries(threepp_demo PRIVATE
         threepp::threepp
-        box2d
         imgui::imgui
 )
 

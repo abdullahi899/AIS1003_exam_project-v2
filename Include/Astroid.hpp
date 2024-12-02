@@ -1,22 +1,25 @@
 #ifndef ASTROID_HPP
 #define ASTROID_HPP
 
-#include "threepp/threepp.hpp"
-#include <memory>
+#include "Conector.hpp"
 #include <vector>
+#include <memory>
 
-class Astroid {
+class Astroid : public GameObject {
 public:
-    explicit Astroid(std::shared_ptr<threepp::Scene> scene);
+    void kill(){
+}
 
-    void update();
-    const threepp::Vector3 &getPosition() const; // Getter for position
+    explicit Astroid(const std::shared_ptr<threepp::Scene> &scene);
 
-    static std::vector<std::shared_ptr<Astroid>> generateAstroids(
-        std::shared_ptr<threepp::Scene> scene, int count);
+    void update(float deltaTime) override;
+
+    void draw(const std::shared_ptr<threepp::Scene> &scene) override;
+
+    static std::vector<std::shared_ptr<Astroid> > generateAstroids(
+        const std::shared_ptr<threepp::Scene> &scene, int count);
 
 private:
-    std::shared_ptr<threepp::Mesh> mesh;
     threepp::Vector3 velocity;
 };
 

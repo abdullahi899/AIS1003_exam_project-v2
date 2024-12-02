@@ -1,29 +1,39 @@
 #ifndef SPACESHIP_HPP
 #define SPACESHIP_HPP
 
-#include "threepp/threepp.hpp"
-#include "Bullet.hpp"
+#include "Collison helper.hpp"
+#include "Conector.hpp"
+#include <vector>
+
 
 using namespace threepp;
 
-class Spaceship {
+#include <memory>
+
+
+class Spaceship : public GameObject {
 public:
-    explicit Spaceship(std::shared_ptr<Scene> &scene);
+    explicit Spaceship(const std::shared_ptr<threepp::Scene> &scene);
+
+    void update(float deltaTime) override;
+
+    void draw(const std::shared_ptr<threepp::Scene> &scene) override;
 
     void moveUp();
-    void moveDown();
+
     void moveLeft();
+
     void moveRight();
-    void shoot(std::vector<std::shared_ptr<Bullet>> &bullets);
-    const threepp::Vector3 &getPosition() const; // Getter for position
+
+    void shoot(std::vector<std::shared_ptr<Bullet> > &bullets);
+
+    void setSpeed(float speed);
 
 private:
-    std::shared_ptr<Group> spaceship;
-    std::shared_ptr<Scene> &scene;
     float moveSpeed = 0.1f;
     float rotationSpeed = 0.04f;
 
-    void createSpaceShip();
+    void createSpaceship();
 };
 
 #endif // SPACESHIP_HPP

@@ -1,22 +1,25 @@
 #ifndef BULLET_HPP
 #define BULLET_HPP
 
-#include "threepp/threepp.hpp"
+#include "Collison helper.hpp"
 #include <memory>
 
+#include "Conector.hpp"
 
-class Bullet {
+class Bullet : public GameObject {
 public:
+    void kill() {
+
+    }
     Bullet(const threepp::Vector3 &position, const threepp::Vector3 &direction, float speed, float lifespan);
 
-    void update(float deltaTime);
-    bool isAlive() const;
-    void draw(const std::shared_ptr<threepp::Scene> &scene);
+    void update(float deltaTime) override;
+    void draw(const std::shared_ptr<threepp::Scene> &scene) override;
 
-    const threepp::Vector3 &getPosition() const;
+    bool isAlive() const;
+    void setSpeed(float speed);
 
 private:
-    std::shared_ptr<threepp::Mesh> mesh;
     threepp::Vector3 velocity;
     float lifespan;
 };

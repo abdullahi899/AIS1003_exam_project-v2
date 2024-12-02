@@ -1,99 +1,89 @@
-#include "Astroid.hpp"
-#include "GameInput.hpp"
 #include "Spaceship.hpp"
+#include "Astroid.hpp"
 #include "Bullet.hpp"
+#include "GameInput.hpp"
+#include "Collison helper.hpp"
 #include "threepp/threepp.hpp"
-#include <algorithm>
-#include <iostream>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include <memory>
+#include <vector>
 
 using namespace threepp;
 
 int main() {
-
-    Canvas canvas("Astroid-Game", {{"resizable", false}});
+    // Initialize threepp canvas and renderer
+    Canvas canvas("Asteroid Game");
     canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::white);
 
+    // Initialize ImGui
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow *>(canvas.windowPtr()), true);
+    ImGui_ImplOpenGL3_Init("#version 130");
+
+    // Scene and camera setup
     auto scene = Scene::create();
+    auto camera = OrthographicCamera::create(-10, 10, 10, -10, -100.0f, 100.0f);
+    camera->position.set(0, 0, 0); // Camera at origin
+    camera->lookAt(Vector3(0, 0, 0)); // Look forward along the -Z axis
 
-    auto camera = OrthographicCamera::create(
-        -10, 10,
-        10, -10,
-        -100.0f, 100.0f);
-
-    camera->position.set(0, 5, 0);
-    camera->lookAt(Vector3(0, 0, 0));
-
-    // Create game objects
+    // Initialize game objects
     Spaceship spaceship(scene);
-    auto astroids = Astroid::generateAstroids(scene, 5);
+    auto astroids = Astroid::generateAstroids(scene, 1);
+    std::vector<std::shared_ptr<Bullet> > bullets;
+
+    // Input and collision handling
     GameInput gameInput(spaceship);
     canvas.addKeyListener(gameInput);
+    // Input and collision handling
+    CollisionHandler collisionHandler(0.2f, 0.5f, 0.3f, scene); // Pass the scene as the fourth argument
 
-    std::vector<std::shared_ptr<Bullet>> bullets;
-    bool running = true; // Flag to control the game loop
 
-    // Define radii for collision detection
-    const float bulletRadius = 0.2f;
-    const float asteroidRadius = 0.5f;
-    const float spaceshipRadius = 0.3f;
+    // Game state
+    int score = 0;
+    bool running = true;
 
-    // Animation loop
+    // Main game loop
     canvas.animate([&]() {
-        if (!running) return; // Stop rendering if the game is over
+        if (!running) return; // Stop the game if not running
 
         renderer.render(*scene, *camera);
-        gameInput.update(bullets);
 
-        // Update and clean up bullets
-        for (auto shot = bullets.begin(); shot != bullets.end();) {
-            (*shot)->update(0.20f);
-            if (!(*shot)->isAlive()) {
-                shot = bullets.erase(shot);
-            } else {
-                (*shot)->draw(scene);
-                ++shot;
-            }
-        }
+        // ImGui new frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        // Update asteroids
-        for (auto &astroid : astroids) {
-            astroid->update();
-        }
+        // Update game logic
+        gameInput.update(bullets); // Handle input
+        spaceship.update(0.0083333333333333f); // Update spaceship
+        for (auto &bullet: bullets) bullet->update(0.0083333333333333f);
+        for (auto &astroid: astroids) astroid->update(0.0083333333333333f);
 
-        // Collision detection: Bullet vs. Asteroid
-        for (auto bullet = bullets.begin(); bullet != bullets.end();) {
-            bool bulletHit = false;
+        // Collision handling
+        collisionHandler.checkCollisions(bullets, astroids, spaceship, running, score);
 
-            for (auto astroid = astroids.begin(); astroid != astroids.end();) {
-                float distance = (*bullet)->getPosition().distanceTo((*astroid)->getPosition());
-                if (distance < (bulletRadius + asteroidRadius)) { // Collision threshold
-                    std::cout << "Bullet hit an asteroid!" << std::endl; // Terminal message
-                    bullet = bullets.erase(bullet); // Remove bullet
-                    astroid = astroids.erase(astroid); // Remove asteroid
-                    bulletHit = true;
-                    break;
-                } else {
-                    ++astroid;
-                }
-            }
+        // Draw bullets
+        for (auto &bullet: bullets) bullet->draw(scene);
 
-            if (!bulletHit) {
-                ++bullet;
-            }
-        }
+        // ImGui score display
+        ImGui::Begin("Scoreboard");
+        ImGui::Text("Score: %d", score); // Show current score
+        ImGui::End();
 
-        // Collision detection: Spaceship vs. Asteroid
-        for (const auto &astroid : astroids) {
-            float distance = spaceship.getPosition().distanceTo(astroid->getPosition());
-            if (distance < (spaceshipRadius + asteroidRadius)) { // Collision threshold
-                std::cout << "Game Over! Spaceship hit an asteroid." << std::endl;
-                running = false; // Stop the game
-                return;
-            }
-        }
+        // Render ImGui
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     });
+
+    // Cleanup ImGui
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     return 0;
 }

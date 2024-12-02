@@ -1,54 +1,55 @@
 #include "Spaceship.hpp"
+#include "threepp/threepp.hpp"
+#include "Bullet.hpp"
 
-Spaceship::Spaceship(std::shared_ptr<Scene> &scene) : scene(scene) {
-    createSpaceShip();
+using namespace threepp;
+
+Spaceship::Spaceship(const std::shared_ptr<Scene> &scene) {
+    createSpaceship();
+    scene->add(mesh);
 }
 
-void Spaceship::createSpaceShip() {
-    spaceship = OBJLoader().load("data/textures/Fighter_01.obj");
-    spaceship->scale.set(0.14, 0.14, 0.14);
-    spaceship->position.x = (std::numbers::pi);
-    scene->add(spaceship);
+void Spaceship::createSpaceship() {
+    mesh = OBJLoader().load("data/textures/Fighter_01.obj"); // Group type is compatible with Object3D
+    mesh->scale.set(0.14f, 0.14f, 0.14f);
+    mesh->rotation.x = math::PI / 2;
 }
+
+void Spaceship::update(float deltaTime) {
+}
+
+void Spaceship::draw(const std::shared_ptr<Scene> &scene) {
+}
+
 
 void Spaceship::moveUp() {
-    spaceship->position.x += moveSpeed * std::sin(spaceship->rotation.y);
-    spaceship->position.z += moveSpeed * std::cos(spaceship->rotation.y);
-
-    if (spaceship->position.x <= -11) {
-        spaceship->position.x = 11;
-    } else if (spaceship->position.x >= 11) {
-        spaceship->position.x = -11;
+    mesh->position.x += moveSpeed * std::sin(mesh->rotation.y);
+    mesh->position.y -= moveSpeed * std::cos(mesh->rotation.y);
+    if (mesh->position.x <= -11) {
+        mesh->position.x = 11;
+    } else if (mesh->position.x >= 11) {
+        mesh->position.x = -11;
+    } else if (mesh->position.y <= -11) {
+        mesh->position.y = 11;
+    } else if (mesh->position.y >= 11) {
+        mesh->position.y = -11;
     }
-    if (spaceship->position.z <= -11) {
-        spaceship->position.z = 11;
-    } else if (spaceship->position.z >= 11) {
-        spaceship->position.z = -11;
-    }
-}
 
-void Spaceship::moveDown() {
-    spaceship->position.x += moveSpeed * std::sin(spaceship->rotation.y);
-    spaceship->position.z += moveSpeed * std::cos(spaceship->rotation.y);
 }
 
 void Spaceship::moveLeft() {
-    spaceship->rotation.y += rotationSpeed;
+    mesh->rotation.y += rotationSpeed;
 }
 
 void Spaceship::moveRight() {
-    spaceship->rotation.y -= rotationSpeed;
+    mesh->rotation.y -= rotationSpeed;
 }
 
-void Spaceship::shoot(std::vector<std::shared_ptr<Bullet>> &bullets) {
-    auto direction = Vector3(std::sin(spaceship->rotation.y), 1, std::cos(spaceship->rotation.y)).normalize();
-    auto position = spaceship->position + direction * 0.1f; // Offset in front of the spaceship
-
+void Spaceship::shoot(std::vector<std::shared_ptr<Bullet> > &bullets) {
+    Vector3 direction = Vector3(std::sin(mesh->rotation.y), -std::cos(mesh->rotation.y), 0);
+    Vector3 position = mesh->position + direction * 0.5f;
     bullets.emplace_back(std::make_shared<Bullet>(position, direction, 0.35f, 5.0f));
 }
-
-const Vector3 &Spaceship::getPosition() const {
-    return spaceship->position;
+void Spaceship::setSpeed(float speed) {
+    moveSpeed = speed;
 }
-
-
