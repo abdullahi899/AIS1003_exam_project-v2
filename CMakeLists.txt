@@ -46,6 +46,8 @@ add_executable(threepp_demo
         Include/Conector.hpp
         Include/Conector.hpp
         "src/Collison helper.cpp"
+        Include/Imugi.hpp
+        src/Imugi.cpp
 )
 
 

@@ -8,9 +8,8 @@
 class Spaceship;
 class Bullet;
 class Astroid;
-namespace threepp {
-    class Scene;
-}
+namespace threepp
+{class Scene;}
 
 class CollisionHandler {
 public:
@@ -30,11 +29,10 @@ private:
 
     std::shared_ptr<threepp::Scene> scene;
 
-    // Direct calculation of squared 2D distance
-    inline float calculateDistanceSquared2D(const threepp::Vector3& a, const threepp::Vector3& b) {
+     float calculateDistanceSquared2D(const threepp::Vector3& a, const threepp::Vector3& b) {
         float dx = a.x - b.x;
         float dy = a.y - b.y;
-        return dx * dx + dy * dy; // Ignore Z-coordinate
+        return dx * dx + dy * dy;
     }
 };
 

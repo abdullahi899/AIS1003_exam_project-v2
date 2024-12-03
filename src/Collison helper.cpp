@@ -2,7 +2,6 @@
 #include "Spaceship.hpp"
 #include "Bullet.hpp"
 #include "Astroid.hpp"
-#include <algorithm> // For std::remove_if
 
 CollisionHandler::CollisionHandler(float bulletRadius, float asteroidRadius, float spaceshipRadius, const std::shared_ptr<threepp::Scene>& scene)
     : bulletRadius(bulletRadius), asteroidRadius(asteroidRadius), spaceshipRadius(spaceshipRadius), scene(scene) {}
@@ -23,12 +22,11 @@ void CollisionHandler::checkCollisions(
             float radiusSum = bulletRadius + asteroidRadius;
 
             if (distanceSquared < (radiusSum * radiusSum)) {
-                // Collision detected
                 (*bullet)->kill(); // Remove bullet from scene
                 (*asteroid)->kill(); // Remove asteroid from scene
 
-                bullet = bullets.erase(bullet); // Remove bullet from vector
-                asteroid = astroids.erase(asteroid); // Remove asteroid from vector
+                bullet = bullets.erase(bullet);
+                asteroid = (astroids.erase(asteroid));
 
                 bulletHit = true;
                 score += 10; // Increment score
@@ -38,7 +36,7 @@ void CollisionHandler::checkCollisions(
                 astroids.push_back(newAsteroid);
 
                 break; // Exit the inner loop
-            } else {
+            } {
                 ++asteroid;
             }
         }

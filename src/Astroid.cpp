@@ -41,3 +41,4 @@ std::vector<std::shared_ptr<Astroid> > Astroid::generateAstroids(const std::shar
     }
     return astroids;
 }
+

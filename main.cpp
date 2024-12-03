@@ -1,47 +1,41 @@
+#include <imgui.h>
 #include "Spaceship.hpp"
 #include "Astroid.hpp"
 #include "Bullet.hpp"
 #include "GameInput.hpp"
 #include "Collison helper.hpp"
+#include "Imugi.hpp"
 #include "threepp/threepp.hpp"
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 #include <memory>
 #include <vector>
 
 using namespace threepp;
 
 int main() {
-    // Initialize threepp canvas and renderer
-    Canvas canvas("Asteroid Game");
+    // Initialize Threepp canvas and renderer
+    Canvas canvas("Astroid-Game", {{"resizable", false}});
     canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::white);
 
-    // Initialize ImGui
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow *>(canvas.windowPtr()), true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+    // Create ImGui helper
+    ImGuiHelper imguiHelper(reinterpret_cast<GLFWwindow*>(canvas.windowPtr()));
 
     // Scene and camera setup
     auto scene = Scene::create();
     auto camera = OrthographicCamera::create(-10, 10, 10, -10, -100.0f, 100.0f);
-    camera->position.set(0, 0, 0); // Camera at origin
-    camera->lookAt(Vector3(0, 0, 0)); // Look forward along the -Z axis
+    camera->position.set(0, 0, 0);
+    camera->lookAt(Vector3(0, 0, 0));
 
     // Initialize game objects
     Spaceship spaceship(scene);
     auto astroids = Astroid::generateAstroids(scene, 1);
-    std::vector<std::shared_ptr<Bullet> > bullets;
+    std::vector<std::shared_ptr<Bullet>> bullets;
 
     // Input and collision handling
     GameInput gameInput(spaceship);
     canvas.addKeyListener(gameInput);
-    // Input and collision handling
-    CollisionHandler collisionHandler(0.2f, 0.5f, 0.3f, scene); // Pass the scene as the fourth argument
-
+    CollisionHandler collisionHandler(0.2f, 0.5f, 0.3f, scene);
 
     // Game state
     int score = 0;
@@ -51,39 +45,33 @@ int main() {
     canvas.animate([&]() {
         if (!running) return; // Stop the game if not running
 
+        // Clear the screen and render the scene
         renderer.render(*scene, *camera);
 
-        // ImGui new frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        // Start ImGui frame
+        imguiHelper.beginFrame();
 
         // Update game logic
         gameInput.update(bullets); // Handle input
         spaceship.update(0.0083333333333333f); // Update spaceship
-        for (auto &bullet: bullets) bullet->update(0.0083333333333333f);
-        for (auto &astroid: astroids) astroid->update(0.0083333333333333f);
+        for (auto& bullet : bullets) bullet->update(0.0083333333333333f);
+        for (auto& astroid : astroids) astroid->update(0.0083333333333333f);
 
         // Collision handling
         collisionHandler.checkCollisions(bullets, astroids, spaceship, running, score);
 
-        // Draw bullets
-        for (auto &bullet: bullets) bullet->draw(scene);
 
-        // ImGui score display
+        // Draw bullets
+        for (auto& bullet : bullets) bullet->draw(scene);
+
+        // Add ImGui components
         ImGui::Begin("Scoreboard");
-        ImGui::Text("Score: %d", score); // Show current score
+        ImGui::Text("Score: %d", score);
         ImGui::End();
 
-        // Render ImGui
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        // Render ImGui components
+        imguiHelper.render();
     });
-
-    // Cleanup ImGui
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 
     return 0;
 }

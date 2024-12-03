@@ -15,7 +15,6 @@ public:
 
     void update(float deltaTime) override;
     void draw(const std::shared_ptr<threepp::Scene> &scene) override;
-
     bool isAlive() const;
     void setSpeed(float speed);
 

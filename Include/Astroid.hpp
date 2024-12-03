@@ -8,6 +8,7 @@
 class Astroid : public GameObject {
 public:
     void kill(){
+
 }
 
     explicit Astroid(const std::shared_ptr<threepp::Scene> &scene);
