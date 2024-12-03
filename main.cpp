@@ -29,7 +29,7 @@ int main() {
 
     // Initialize game objects
     Spaceship spaceship(scene);
-    auto astroids = Astroid::generateAstroids(scene, 1);
+    auto astroids = Astroid::generateAstroids(scene, 7);
     std::vector<std::shared_ptr<Bullet>> bullets;
 
     // Input and collision handling

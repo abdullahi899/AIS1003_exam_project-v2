@@ -22,21 +22,21 @@ void CollisionHandler::checkCollisions(
             float radiusSum = bulletRadius + asteroidRadius;
 
             if (distanceSquared < (radiusSum * radiusSum)) {
-                (*bullet)->kill(); // Remove bullet from scene
-                (*asteroid)->kill(); // Remove asteroid from scene
+                (*bullet)->kill(); // Remove bullet from the scene
+                (*asteroid)->kill(); // Remove asteroid from the scene
 
-                bullet = bullets.erase(bullet);
-                asteroid = (astroids.erase(asteroid));
+                bullet = bullets.erase(bullet); // Erase bullet from vector
+                asteroid = astroids.erase(asteroid); // Erase asteroid from vector
 
                 bulletHit = true;
                 score += 10; // Increment score
 
-                // Add a new asteroid to the scene
+                // Optionally, spawn a new asteroid
                 auto newAsteroid = std::make_shared<Astroid>(scene);
                 astroids.push_back(newAsteroid);
 
                 break; // Exit the inner loop
-            } {
+            } else {
                 ++asteroid;
             }
         }
@@ -46,7 +46,7 @@ void CollisionHandler::checkCollisions(
         }
     }
 
-    // Check for spaceship collisions with asteroids (game over logic)
+    // Check for spaceship collisions with asteroids
     for (const auto& asteroid : astroids) {
         float distanceSquared = calculateDistanceSquared2D(spaceship.getPosition(), asteroid->getPosition());
         float radiusSum = spaceshipRadius + asteroidRadius;

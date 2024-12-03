@@ -29,9 +29,9 @@ private:
 
     std::shared_ptr<threepp::Scene> scene;
 
-     float calculateDistanceSquared2D(const threepp::Vector3& a, const threepp::Vector3& b) {
-        float dx = a.x - b.x;
-        float dy = a.y - b.y;
+     float calculateDistanceSquared2D(const threepp::Vector3& abd, const threepp::Vector3& b) {
+        float dx = abd.x - b.x;
+        float dy = abd.y - b.y;
         return dx * dx + dy * dy;
     }
 };
