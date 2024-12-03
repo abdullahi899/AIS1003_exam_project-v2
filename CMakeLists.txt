@@ -35,17 +35,16 @@ file(COPY ${CMAKE_SOURCE_DIR}/data/textures DESTINATION ${CMAKE_BINARY_DIR}/data
 
 add_executable(threepp_demo
         main.cpp
-
         Include/GameInput.hpp
         Include/Astroid.hpp
         src/Astroid.cpp
         Include/Bullet.hpp
         src/Bullet.cpp
         src/Spaceship.cpp
-        "Include/Collison helper.hpp"
+        Include/CollistionHandler.hpp
         Include/Conector.hpp
         Include/Conector.hpp
-        "src/Collison helper.cpp"
+        src/CollistionHandler.cpp
         Include/Imugi.hpp
         src/Imugi.cpp
 )

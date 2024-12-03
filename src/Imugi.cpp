@@ -3,12 +3,11 @@
 
 ImGuiHelper::ImGuiHelper(GLFWwindow* window, const char* glslVersion) {
     // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
+
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+
 
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -33,10 +32,3 @@ void ImGuiHelper::render() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void ImGuiHelper::drawUI() {
-    // Example ImGui window
-    ImGui::Begin("Example Window");
-    ImGui::Text("Hello, ImGui!");
-    bool SliderFloat(const char* label, float* v, float v_min, float v_max, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-    ImGui::End();
-}

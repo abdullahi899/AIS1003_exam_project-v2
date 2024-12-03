@@ -1,5 +1,5 @@
-#ifndef COLLISION_HELPER_HPP
-#define COLLISION_HELPER_HPP
+#ifndef COLLLISTIONHANDLER_HPP
+#define COLLLISTIONHANDLER_HPP
 
 #include <vector>
 #include <memory>
@@ -29,11 +29,11 @@ private:
 
     std::shared_ptr<threepp::Scene> scene;
 
-     float calculateDistanceSquared2D(const threepp::Vector3& abd, const threepp::Vector3& b) {
-        float dx = abd.x - b.x;
-        float dy = abd.y - b.y;
+     float calculateDistanceSquared2D(const threepp::Vector3& xAxis, const threepp::Vector3& yAxis) {
+        float dx =xAxis.x - yAxis.x;
+        float dy = xAxis.y - yAxis.y;
         return dx * dx + dy * dy;
     }
 };
 
-#endif // COLLISION_HELPER_HPP
+#endif

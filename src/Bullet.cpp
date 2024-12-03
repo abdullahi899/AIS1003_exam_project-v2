@@ -2,19 +2,22 @@
 
 using namespace threepp;
 
-Bullet::Bullet(const Vector3& position, const Vector3& direction, float speed, float lifespan)
+Bullet::Bullet(const Vector3 &position, const Vector3 &direction, float speed, float lifespan)
     : velocity(direction * speed), lifespan(lifespan) {
-    auto geometry = SphereGeometry::create(0.2f, 16, 16);
-    auto material = MeshBasicMaterial::create();
+    //Bullet will be made her
+    std::shared_ptr<SphereGeometry> geometry = SphereGeometry::create(0.2f, 16, 16);
+    std::shared_ptr<MeshBasicMaterial> material = MeshBasicMaterial::create();
     material->color = Color::red;
     mesh = Mesh::create(geometry, material);
     mesh->position.copy(position);
 }
 
 void Bullet::update(float deltaTime) {
-    if (!mesh) return; // Skip update if the bullet has been "killed"
 
+    //Bullet will move
     mesh->position.add(velocity);
+
+    //How long the bullet will exsist
     lifespan -= deltaTime;
 
     // Automatically "kill" the bullet if its lifespan expires
@@ -23,16 +26,18 @@ void Bullet::update(float deltaTime) {
     }
 }
 
-void Bullet::draw(const std::shared_ptr<Scene>& scene) {
+void Bullet::draw(const std::shared_ptr<Scene> &scene) {
+    //Bullet will be added to the scene
     if (mesh) {
         scene->add(mesh);
     }
 }
 
-void Bullet::kill( ) {
+void Bullet::kill() {
     if (mesh && mesh->parent) {
-        mesh->parent->remove(*mesh); // Remove from the scene
-         // Invalidate the mesh pointer
+        //Bullet will be removed from scene
+        mesh->parent->remove(*mesh);
+        // Invalidate the mesh pointer
     }
 }
 

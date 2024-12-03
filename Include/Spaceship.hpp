@@ -1,15 +1,14 @@
 #ifndef SPACESHIP_HPP
 #define SPACESHIP_HPP
 
-#include "Collison helper.hpp"
-#include "Conector.hpp"
+#include "CollistionHandler.hpp"
 #include <vector>
-
-
-using namespace threepp;
-
 #include <memory>
 
+#include "Conector.hpp"
+#include "threepp/threepp.hpp"
+
+using namespace threepp;
 
 class Spaceship : public GameObject {
 public:
@@ -25,7 +24,7 @@ public:
 
     void moveRight();
 
-    void shoot(std::vector<std::shared_ptr<Bullet> > &bullets);
+    void shoot(std::vector<std::shared_ptr<Bullet>>& bullets);
 
     void setSpeed(float speed);
 

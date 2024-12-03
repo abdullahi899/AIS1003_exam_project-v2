@@ -1,7 +1,7 @@
 add_library(aircraftLib
         Bullet.cpp
         Spaceship.cpp
-        "Collison helper.cpp"
+        CollistionHandler.cpp
         Imugi.cpp)
 target_sources(aircraftLib PRIVATE astroid.cpp)
 target_include_directories(aircraftLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
