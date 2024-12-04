@@ -1,7 +1,9 @@
 # Define the test executable
 add_executable(tests
         test_Asteroid.cpp
-
+        test_Spaceship.cpp
+        test_Bullet.cpp
+        test_collision.cpp
 )
 
 # Include directories for the tests
@@ -19,7 +21,3 @@ target_link_libraries(tests PRIVATE
 # Register the tests with CTest
 enable_testing()
 add_test(NAME AstroidTests COMMAND tests)
-
-
-target_sources(aircraftLib PRIVATE src/Imgui.cpp)
-
