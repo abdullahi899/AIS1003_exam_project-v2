@@ -1,14 +1,14 @@
 #include "CollistionHandler.hpp"
 #include "Spaceship.hpp"
 #include "Bullet.hpp"
-#include "Astroid.hpp"
+#include "Asteroid.hpp"
 
-CollisionHandler::CollisionHandler(float bulletRadius, float asteroidRadius, float spaceshipRadius, const std::shared_ptr<Scene>& scene)
+CollisionHandler::CollisionHandler(const float bulletRadius, const float asteroidRadius, const float spaceshipRadius, const std::shared_ptr<Scene>& scene)
     : bulletRadius(bulletRadius), asteroidRadius(asteroidRadius), spaceshipRadius(spaceshipRadius), scene(scene) {}
 
 void CollisionHandler::checkCollisions(
     std::vector<std::shared_ptr<Bullet>>& bullets,
-    std::vector<std::shared_ptr<Astroid>>& astroids,
+    std::vector<std::shared_ptr<Asteroid>>& asteroids,
     const Spaceship& spaceship,
     bool& running,
     int& score) {
@@ -17,7 +17,7 @@ void CollisionHandler::checkCollisions(
     for (std::vector<std::shared_ptr<Bullet>>::iterator bullet = bullets.begin(); bullet != bullets.end();) {
         bool bulletHit = false;
 
-        for (auto asteroid = astroids.begin(); asteroid != astroids.end();) {
+        for (auto asteroid = asteroids.begin(); asteroid != asteroids.end();) {
             //This will take away z.Axsis
             float distanceSquared = calculateDistanceSquared2D((*bullet)->getPosition(), (*asteroid)->getPosition());
             float radiusSum = bulletRadius + asteroidRadius;
@@ -29,14 +29,14 @@ void CollisionHandler::checkCollisions(
 
                 // Erase bullet and Astroid from vektor
                 bullet = bullets.erase(bullet);
-                asteroid = astroids.erase(asteroid);
+                asteroids.erase(asteroid);
                 //update Score
                 bulletHit = true;
                 score += 10;
 
-                // This will spown 1 new Astroid
-                std::shared_ptr<Astroid>newAsteroid = std::make_shared<Astroid>(scene);
-                astroids.push_back(newAsteroid);
+                // This will spown 1 new Astroid after hit
+                std::shared_ptr<Asteroid>newAsteroid = std::make_shared<Asteroid>(scene);
+                asteroids.push_back(newAsteroid);
 
                 break;
             }
@@ -50,7 +50,7 @@ void CollisionHandler::checkCollisions(
     }
 
     // Spaceship collisions with asteroids
-    for (const std::shared_ptr<Astroid>& asteroid : astroids) {
+    for (const std::shared_ptr<Asteroid>& asteroid : asteroids) {
         float distanceSquared = calculateDistanceSquared2D(spaceship.getPosition(), asteroid->getPosition());
         float radiusSum = spaceshipRadius + asteroidRadius;
 

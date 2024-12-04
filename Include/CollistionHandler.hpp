@@ -3,13 +3,13 @@
 
 #include <vector>
 #include <memory>
+#include <Spaceship.hpp>
+#include "Asteroid.hpp"
+#include "Bullet.hpp"
 #include "threepp/math/Vector3.hpp"
 
-class Spaceship;
-class Bullet;
-class Astroid;
-namespace threepp
-{class Scene;}
+
+using namespace threepp;
 
 class CollisionHandler {
 public:
@@ -17,7 +17,7 @@ public:
 
     void checkCollisions(
         std::vector<std::shared_ptr<Bullet>>& bullets,
-        std::vector<std::shared_ptr<Astroid>>& astroids,
+        std::vector<std::shared_ptr<Asteroid>>& asteroids,
         const Spaceship& spaceship,
         bool& running,
         int& score);
@@ -27,11 +27,11 @@ private:
     float asteroidRadius;
     float spaceshipRadius;
 
-    std::shared_ptr<threepp::Scene> scene;
+    std::shared_ptr<Scene> scene;
 
-     float calculateDistanceSquared2D(const threepp::Vector3& xAxis, const threepp::Vector3& yAxis) {
-        float dx =xAxis.x - yAxis.x;
-        float dy = xAxis.y - yAxis.y;
+     static float calculateDistanceSquared2D(const Vector3& xAxis, const Vector3& yAxis) {
+         const float dx =xAxis.x - yAxis.x;
+         const float dy = xAxis.y - yAxis.y;
         return dx * dx + dy * dy;
     }
 };

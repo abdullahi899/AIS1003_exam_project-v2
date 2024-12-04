@@ -11,9 +11,9 @@ public:
     virtual void update(float deltaTime) = 0;
     virtual void draw(const std::shared_ptr<threepp::Scene>& scene) = 0;
 
-    virtual void kill() { mesh = nullptr; } // Default implementation
+    virtual void kill() { mesh = nullptr; }
 
-    const threepp::Vector3& getPosition() const { return mesh->position; }
+    [[nodiscard]] const threepp::Vector3& getPosition() const { return mesh->position; }
 
 protected:
     std::shared_ptr<threepp::Object3D> mesh;

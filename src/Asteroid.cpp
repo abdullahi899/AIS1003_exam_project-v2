@@ -1,10 +1,10 @@
-#include "Astroid.hpp"
+#include "Asteroid.hpp"
 #include <random>
 #include <memory>
 
 using namespace threepp;
 
-Astroid::Astroid(const std::shared_ptr<Scene>& scene) {
+Asteroid::Asteroid(const std::shared_ptr<Scene>& scene) {
     //This will create Astroid
     std::shared_ptr<SphereGeometry> geometry = SphereGeometry::create(0.4f, 200, 200);
     std::shared_ptr<MeshBasicMaterial> material = MeshBasicMaterial::create();
@@ -23,7 +23,7 @@ Astroid::Astroid(const std::shared_ptr<Scene>& scene) {
     scene->add(mesh);
 }
 
-void Astroid::update(float deltaTime) {
+void Asteroid::update(float deltaTime) {
 
     //The Astroid will move
     mesh->position.add(velocity);
@@ -35,22 +35,22 @@ void Astroid::update(float deltaTime) {
     if (mesh->position.y > 10) mesh->position.y = -10;
 }
 
-void Astroid::draw(const std::shared_ptr<Scene>& scene) {
+void Asteroid::draw(const std::shared_ptr<Scene>& scene) {
 
 }
 
-void Astroid::kill() {
+void Asteroid::kill() {
     //Astroid will be removed form screen and memory
     if (mesh && mesh->parent) {
         mesh->parent->remove(*mesh);
     }
 }
 
-std::vector<std::shared_ptr<Astroid>> Astroid::generateAstroids(const std::shared_ptr<Scene>& scene, int count) {
+std::vector<std::shared_ptr<Asteroid>> Asteroid::generateAsteroid(const std::shared_ptr<Scene>& scene, int count) {
     //Astroid will be stored her
-    std::vector<std::shared_ptr<Astroid>> astroids;
+    std::vector<std::shared_ptr<Asteroid>> astroids;
     for (int i = 1; i < count; ++i) {
-        astroids.push_back(std::make_shared<Astroid>(scene));
+        astroids.push_back(std::make_shared<Asteroid>(scene));
     }
     return astroids;
 }

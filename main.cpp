@@ -1,13 +1,10 @@
-#include <imgui.h>
 #include "Spaceship.hpp"
-#include "Astroid.hpp"
+#include "Asteroid.hpp"
 #include "Bullet.hpp"
 #include "GameInput.hpp"
 #include "CollistionHandler.hpp"
-#include "Imugi.hpp"
+#include "Imgui.hpp"
 #include "threepp/threepp.hpp"
-#include <memory>
-#include <vector>
 
 using namespace threepp;
 
@@ -19,16 +16,16 @@ int main() {
     renderer.setClearColor(Color::white);
 
     // It will create ImguiHelper
-    ImGuiHelper imguiHelper(reinterpret_cast<GLFWwindow *>(canvas.windowPtr()));
+    ImGuiHelper imguiHelper(static_cast<GLFWwindow *>(canvas.windowPtr()));
 
     // Camera and scene
-    auto scene = Scene::create();
-    auto camera = OrthographicCamera::create(-10, 10, 10, -10, -100.0f, 100.0f);
+    const auto scene = Scene::create();
+    const auto camera = OrthographicCamera::create(-10, 10, 10, -10, -100.0f, 100.0f);
     camera->position.set(0, 0, 0);
 
     // This will create Astroid
     Spaceship spaceship(scene);
-    auto astroids = Astroid::generateAstroids(scene, 7);
+    auto astroids = Asteroid::generateAsteroid(scene, 7);
     std::vector<std::shared_ptr<Bullet> > bullets;
 
 
@@ -70,7 +67,7 @@ int main() {
 
 
         // Draw bullets
-        for (auto &bullet: bullets) bullet->draw(scene);
+        for (const auto &bullet: bullets) bullet->draw(scene);
 
         // will Add ImGui components
         ImGui::Begin("Scoreboard");

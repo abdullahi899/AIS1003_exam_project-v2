@@ -1,21 +1,23 @@
-# Add the test executable
+# Define the test executable
 add_executable(tests
+        test_Asteroid.cpp
+        test_Spaceship.cpp
+        test_Bullet.cpp
         test_collision.cpp
-        test_spaceship.cpp
 )
 
-# Include directories for the source files and external dependencies
+# Include directories for the tests
 target_include_directories(tests PRIVATE
-        ${CMAKE_SOURCE_DIR}/Include  # Adjust based on your project structure
+        ${CMAKE_SOURCE_DIR}/include
         ${CMAKE_SOURCE_DIR}/src
 )
 
 # Link the test executable with required libraries
 target_link_libraries(tests PRIVATE
-        threepp::threepp           # Link with Threepp library
-        Catch2::Catch2WithMain     # Link Catch2 with the main function
+        aircraftLib           # Link the main library
+        Catch2::Catch2WithMain # Link Catch2 with the main function
 )
 
-# Register the test executable with CTest
-enable_testing()                # Ensure testing is enabled in CMake
-add_test(NAME SpaceshipGameTests COMMAND tests)
+# Register the tests with CTest
+enable_testing()
+add_test(NAME AstroidTests COMMAND tests)

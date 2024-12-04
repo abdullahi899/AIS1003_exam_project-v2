@@ -1,30 +1,29 @@
 #ifndef SPACESHIP_HPP
 #define SPACESHIP_HPP
 
-#include "CollistionHandler.hpp"
+#include "Bullet.hpp"
 #include <vector>
 #include <memory>
-
-#include "Conector.hpp"
+#include "GameObject.hpp"
 #include "threepp/threepp.hpp"
 
 using namespace threepp;
 
 class Spaceship : public GameObject {
 public:
-    explicit Spaceship(const std::shared_ptr<threepp::Scene> &scene);
+    explicit Spaceship(const std::shared_ptr<Scene> &scene);
 
     void update(float deltaTime) override;
 
-    void draw(const std::shared_ptr<threepp::Scene> &scene) override;
+    void draw(const std::shared_ptr<Scene> &scene) override;
 
-    void moveUp();
+    void moveUp() const;
 
-    void moveLeft();
+    void moveLeft() const;
 
-    void moveRight();
+    void moveRight() const;
 
-    void shoot(std::vector<std::shared_ptr<Bullet>>& bullets);
+    void shoot(std::vector<std::shared_ptr<Bullet>>& bullets) const;
 
     void setSpeed(float speed);
 

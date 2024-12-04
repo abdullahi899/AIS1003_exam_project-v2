@@ -1,20 +1,31 @@
-# inlcude
-
-This is a simple example of how to use consume [threepp](https://github.com/markaren/threepp) using CMake's
-
-Includes Imgui as a bundled dependency.
 
 
-### Using vcpkg (manifest mode)
+### 10049
+# Asteroid Game
+ 
 
-This project includes `vcpkg.json`, but does not use it. 
+#### 2D asteroid game built using C++, Threepp, and ImGui. Control a spaceship to dodge and destroy asteroids, track your score, and get the highest score
 
-You may add dependencies on your own and
-call all CMake with `-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake`
+##### This is a project in the subject AIS1003. It has 7 heder files,6 source files and 3 test files.
 
-##### vcpkg under mingw
-Under MinGW you'll need to specify the vcpkg triplet:
-```shell
--DVCPKG_TARGET_TRIPLET=x64-mingw-[static|dynamic]  # choose either `static` or `dynamic`.
--DVCPKG_HOST_TRIPLET=x64-mingw-[static|dynamic]    # <-- needed only if MSVC cannot be found. 
-```
+
+## Gameplay
+<img src ="imagesReadme/Animation.gif" width="250" height="250"/>
+
+## Gameplay Instructions
+- Use **W**, **A**, **D** to move your spaceship:
+  - `W` to move forward.
+  - `A` to rotate left.
+  - `D` to rotate right.
+- Press **Spacebar** to shoot bullets.
+- Avoid or destroy asteroids to survive and score points.
+
+
+
+
+
+
+
+
+## UML Diagram
+![img.png](imagesReadme/img.png)

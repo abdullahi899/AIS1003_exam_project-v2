@@ -7,7 +7,7 @@
 
 using namespace threepp;
 
-class GameInput : public KeyListener {
+class GameInput final : public KeyListener {
 public:
     explicit GameInput(Spaceship &spaceship) : m_spaceship(spaceship) {
     }

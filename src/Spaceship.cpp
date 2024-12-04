@@ -4,31 +4,33 @@
 
 using namespace threepp;
 
-Spaceship::Spaceship(const std::shared_ptr<Scene>& scene) {
-    createSpaceship();
-    scene->add(mesh); // Add the spaceship mesh to the scene
-}
 
 void Spaceship::createSpaceship() {
+    //This will create the Craft
     mesh = OBJLoader().load("data/textures/Fighter_01.obj"); // Load the spaceship model
-    mesh->scale.set(0.14f, 0.14f, 0.14f); // Set scale
-    mesh->rotation.x = math::PI / 2; // Rotate for proper orientation
+    mesh->scale.set(0.14f, 0.14f, 0.14f); // The scale
+    mesh->rotation.x = math::PI / 2; //  This will make the Spaceship right way up
+}
+Spaceship::Spaceship(const std::shared_ptr<Scene>& scene) {
+    //This will add the Spaceship to the scene
+    createSpaceship();
+    scene->add(mesh);
 }
 
-// Implement the update method
+
+// Should have made it in another way
 void Spaceship::update(float deltaTime) {
-    // Example: Could handle animations or continuous updates
+
 }
 
-// Implement the draw method
+// Should also made it in another way
 void Spaceship::draw(const std::shared_ptr<Scene>& scene) {
-    if (mesh) {
-        scene->add(mesh); // Add the spaceship mesh to the scene if it exists
-    }
+
 }
 
-// Other member functions
-void Spaceship::moveUp() {
+
+void Spaceship::moveUp() const {
+    // this will make the Spaceship move
     mesh->position.x += moveSpeed * std::sin(mesh->rotation.y);
     mesh->position.y -= moveSpeed * std::cos(mesh->rotation.y);
 
@@ -39,15 +41,18 @@ void Spaceship::moveUp() {
     else if (mesh->position.y >= 11) mesh->position.y = -11;
 }
 
-void Spaceship::moveLeft() {
+void Spaceship::moveLeft() const {
+    //this will make the Spaceship rotate left
     mesh->rotation.y += rotationSpeed;
 }
 
-void Spaceship::moveRight() {
+void Spaceship::moveRight() const {
+    //this will make the Spaceship rotate right
     mesh->rotation.y -= rotationSpeed;
 }
 
-void Spaceship::shoot(std::vector<std::shared_ptr<Bullet>>& bullets) {
+void Spaceship::shoot(std::vector<std::shared_ptr<Bullet>>& bullets) const {
+    //this will make the bullet shoot from Spacecraft
     Vector3 direction(std::sin(mesh->rotation.y), -std::cos(mesh->rotation.y), 0);
     Vector3 position = mesh->position + direction * 0.5f;
     bullets.emplace_back(std::make_shared<Bullet>(position, direction, 0.35f, 5.0f));
