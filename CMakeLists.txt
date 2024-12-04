@@ -37,6 +37,8 @@ add_executable(threepp_v1 main.cpp)
 # Link the main executable with the aircraft library
 target_link_libraries(threepp_v1 PRIVATE aircraftLib)
 
+target_sources(aircraftLib PRIVATE src/Imgui.cpp)
+
 # Include the necessary directories
 target_include_directories(threepp_v1 PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
