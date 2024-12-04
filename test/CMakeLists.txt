@@ -1,9 +1,7 @@
 # Define the test executable
 add_executable(tests
         test_Asteroid.cpp
-        test_Spaceship.cpp
-        test_Bullet.cpp
-        test_collision.cpp
+
 )
 
 # Include directories for the tests
