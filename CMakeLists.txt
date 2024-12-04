@@ -3,16 +3,16 @@ project(aircraft)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# Add subdirectories
+
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(external)
 
-# threepp configuration
+
 set(THREEPP_BUILD_TEST OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
 
-# FetchContent for external dependencies
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -30,7 +30,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(threepp Catch2)
 
-# Define the main executable
+
 add_executable(threepp_demo
         main.cpp
 )
