@@ -74,7 +74,7 @@ int main() {
         ImGui::Text("Score: %d", score);
         ImGui::End();
 
-        // this will oppdate the imgui
+        // this will oppdate the Imgui
         imguiHelper.render();
     });
 

@@ -1,4 +1,4 @@
-add_library(aircraftLib
+add_library(Threepp
         Bullet.cpp
         Spaceship.cpp
         CollistionHandler.cpp
@@ -6,9 +6,9 @@ add_library(aircraftLib
         Asteroid.cpp
 )
 
-target_include_directories(aircraftLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(Threepp PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(aircraftLib PUBLIC
+target_link_libraries(Threepp PUBLIC
         threepp::threepp
         imgui::imgui
 )

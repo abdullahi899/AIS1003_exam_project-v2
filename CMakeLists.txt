@@ -1,13 +1,19 @@
 cmake_minimum_required(VERSION 3.19)
-project(Aircraft)
+project(aircraft)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include(FetchContent)
+# Add subdirectories
+add_subdirectory(src)
+add_subdirectory(test)
+add_subdirectory(external)
 
-# Fetch dependencies
+# threepp configuration
 set(THREEPP_BUILD_TEST OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
+
+# FetchContent for external dependencies
+include(FetchContent)
 
 FetchContent_Declare(
         threepp
@@ -23,19 +29,18 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(threepp Catch2)
 
-# Add subdirectories
-add_subdirectory(src)
-add_subdirectory(test)
-add_subdirectory(external)
+# Define the main executable
+add_executable(threepp_demo
+        main.cpp
+)
 
-# Copy assets (e.g., textures) to the build directory
-file(COPY ${CMAKE_SOURCE_DIR}/data/textures DESTINATION ${CMAKE_BINARY_DIR}/data)
+target_include_directories(threepp_demo PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-# Main executable
-add_executable(threepp_v1 main.cpp)
+target_link_libraries(threepp_demo PRIVATE
+        Threepp
+        threepp::threepp
+        imgui::imgui
+)
 
-# Link the main executable with the aircraft library
-target_link_libraries(threepp_v1 PRIVATE aircraftLib)
-
-# Include the necessary directories
-target_include_directories(threepp_v1 PRIVATE ${CMAKE_SOURCE_DIR}/include)
+# Copy data directory
+file(COPY ${CMAKE_SOURCE_DIR}/data/ DESTINATION ${CMAKE_BINARY_DIR}/data)
