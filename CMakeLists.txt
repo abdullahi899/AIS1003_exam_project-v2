@@ -27,6 +27,7 @@ FetchContent_Declare(
         GIT_TAG v3.4.0
 )
 
+
 FetchContent_MakeAvailable(threepp Catch2)
 
 # Define the main executable
