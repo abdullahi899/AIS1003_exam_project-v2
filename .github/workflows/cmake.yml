@@ -1,40 +1,176 @@
-name: Build and Test
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+name: Build
+
+on: [push, workflow_dispatch]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  linux:
+
+    runs-on: ${{ matrix.os }}
+    env:
+      CC: gcc-${{ matrix.compiler_version }}
+      CXX: g++-${{ matrix.compiler_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-22.04 ]
+        compiler_version: [ 11 ]
 
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # Step 2: Install required system dependencies
-      - name: Install dependencies
+      - name: Install prerequisites
         run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake g++ libgl1-mesa-dev libx11-dev libxrandr-dev libxi-dev libxxf86vm-dev libxinerama-dev libxcursor-dev
+          sudo apt-get update && sudo apt-get install -y \
+          libxinerama-dev \
+          libxcursor-dev \
+          xorg-dev \
+          libglu1-mesa-dev \
+          pkg-config \
+          libglfw3 \
+          libglfw3-dev
 
-      # Step 3: Configure the project using CMake
-      - name: Configure CMake
+      - name: Configure and build
         run: |
-          cmake -S . -B build
+          cmake . -B build -DTHREEPP_USE_EXTERNAL_GLFW=ON -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build
 
-      # Step 4: Build the project
-      - name: Build the project
+      - name: Test
         run: |
-          cmake --build build -- -j$(nproc)
-
-      # Step 5: Run tests (if you have tests configured)
-      - name: Run tests
-        run: |
-          cd build
+          cd build/tests
           ctest --output-on-failure
+
+  linux-no-glfw:
+
+    runs-on: ${{ matrix.os }}
+    env:
+      CC: gcc-${{ matrix.compiler_version }}
+      CXX: g++-${{ matrix.compiler_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-22.04 ]
+        compiler_version: [ 11 ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+          libxinerama-dev \
+          libxcursor-dev \
+          xorg-dev \
+          libglu1-mesa-dev \
+          pkg-config
+
+      - name: Configure and build
+        run: |
+          cmake . -B build -DTHREEPP_WITH_GLFW=OFF -DTHREEPP_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build
+
+      - name: Test
+        run: |
+          cd build/tests
+          ctest --output-on-failure
+
+  vcpkg-on-linux:
+
+    runs-on: ${{ matrix.os }}
+    env:
+      CC: gcc-${{ matrix.compiler_version }}
+      CXX: g++-${{ matrix.compiler_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04]
+        compiler_version: [11]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+          libxinerama-dev \
+          libxcursor-dev \
+          xorg-dev \
+          libglu1-mesa-dev \
+          pkg-config
+
+      - name: Restore artifacts, or run vcpkg, build (and cache artifacts as post step)
+        uses: lukka/run-vcpkg@v10
+        id: runvcpkg
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
+          vcpkgJsonGlob: 'vcpkg.json'
+          appendedCacheKey: vcpkginstall
+
+      - name: Configure and build
+        run: |
+          cmake . -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_MANIFEST_FEATURES="assimp" -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build
+
+      - name: Test
+        run: |
+          cd build/tests
+          ctest --output-on-failure
+
+
+  windows:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure and build
+        run: |
+          cmake . -A x64 -B build -DTHREEPP_TREAT_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build --config Release
+
+      - name: Test
+        run: |
+          cd build/tests
+          ctest -C Release --output-on-failure
+
+
+
+  linux-emscripten:
+
+    runs-on: ${{ matrix.os }}
+    env:
+      CC: gcc-${{ matrix.compiler_version }}
+      CXX: g++-${{ matrix.compiler_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-22.04 ]
+        compiler_version: [ 11 ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+          libxinerama-dev \
+          libxcursor-dev \
+          xorg-dev \
+          libglu1-mesa-dev \
+          pkg-config
+
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.71
+          actions-cache-folder: 'emsdk-cache'
+
+      - name: Configure and build
+        run: |
+          cmake . -B build -DCMAKE_TOOLCHAIN_FILE=${{env.EMSDK}}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DTHREEPP_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build
