@@ -1,0 +1,61 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-2022]
+        compiler: [gcc, clang]
+        build_type: [Release, Debug]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Install dependencies (Linux)
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake g++ libxinerama-dev libxcursor-dev xorg-dev \
+            libglu1-mesa-dev pkg-config libglfw3 libglfw3-dev
+
+      # Step 3: Install dependencies (Windows)
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+          choco install mingw --yes
+          refreshenv
+
+      # Step 4: Configure the build
+      - name: Configure with CMake
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DTHREEPP_USE_EXTERNAL_GLFW=ON
+
+      # Step 5: Build the project
+      - name: Build
+        run: |
+          cmake --build build --config ${{ matrix.build_type }}
+
+      # Step 6: Run tests
+      - name: Run tests
+        run: |
+          cd build
+          ctest --output-on-failure
