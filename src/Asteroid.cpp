@@ -5,7 +5,7 @@
 using namespace threepp;
 
 Asteroid::Asteroid(const std::shared_ptr<Scene>& scene) {
-    //This will create Astroid
+    //This will create Asteroid
     std::shared_ptr<SphereGeometry> geometry = SphereGeometry::create(0.4f, 200, 200);
     std::shared_ptr<MeshBasicMaterial> material = MeshBasicMaterial::create();
     material->color = Color::black;
@@ -14,10 +14,10 @@ Asteroid::Asteroid(const std::shared_ptr<Scene>& scene) {
     // Generate random position and velocity between -10 and +10 window, and 2 different speed
     std::random_device rd;
     std::mt19937 generator(rd());
-    std::uniform_real_distribution<float> positionDist(-10.f, 10.f);
+    std::uniform_real_distribution<float> positionDist(10.f, 10.f);
     std::uniform_real_distribution<float> velocityDist(-0.05f, 0.05f);
 
-    //This will add make the Astroid spown at random plases
+    //This will add make the Asteroid spawn at random places
     mesh->position.set(positionDist(generator), positionDist(generator), 0);
     velocity = Vector3(velocityDist(generator), velocityDist(generator), 0);
     scene->add(mesh);
@@ -40,7 +40,7 @@ void Asteroid::draw(const std::shared_ptr<Scene>& scene) {
 }
 
 void Asteroid::kill() {
-    //Astroid will be removed form screen and memory
+    //Asteroid will be removed form screen and memory
     if (mesh && mesh->parent) {
         mesh->parent->remove(*mesh);
     }

@@ -19,3 +19,7 @@ target_link_libraries(tests PRIVATE
 # Register the tests with CTest
 enable_testing()
 add_test(NAME AstroidTests COMMAND tests)
+
+
+target_sources(aircraftLib PRIVATE src/Imgui.cpp)
+
